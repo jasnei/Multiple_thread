@@ -21,7 +21,7 @@ class heat_up_watrt(threading.Thread):
         print(self.name)
         print(threading.current_thread().name)
         # 这两个都是打印出当前子线程的名字
-        time.sleep(3)
+        time.sleep(2)
         print('Water boiled.')
 
 start_time = time.time()
