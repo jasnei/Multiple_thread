@@ -3,30 +3,32 @@ import time
 import queue
 
 '''
-模拟包子店卖包子
-厨房每一秒钟制造一个包子
-顾客每三秒吃掉一个包子
-厨房一次性最多存放100个包子
+Simulate a bread store
+0.2 second produce a bread
+0.5 second consume a bread
+Maxmum storage is 100
 '''
+# maxmum storage
 q = queue.Queue(maxsize=100)
-# 厨房一次性最多存放100个包子
 
 def produce(q):
-    # 这个函数专门产生包子
+    """
+    Produce fuction
+    """
     for i in range(20):
-        # 生产出包子，表明包子的id号
-        q.put('第{}个包子'.format(str(i)))
-        # 要0.2秒才能造出一个包子
+        # produce bread & number is the ID
+        q.put('{}th bread'.format(str(i)))
+        # 0.2 second produce one
         time.sleep(0.2)
         
 
 def consume(q):
-    # 只要包子店里有包子
+    # only if store has bread
     while not q.empty():
-        # q.qsize()是获取队列中剩余的数量
-        print('包子店的包子剩余量：'+str(q.qsize()))
-        # q.get()是一个堵塞的，会等待直到获取到数据
-        print('小桃红吃了:'+str(q.get()))
+        # q.qsize() is the total bread in store
+        print('Total storage: '+str(q.qsize()))
+        # q.get() is block, to get the bread from store
+        print('Cosume: '+str(q.get()))
         print('-'*20)
         time.sleep(0.5)
 
@@ -38,4 +40,4 @@ t2.start()
 t1.join()
 t2.join()
 end_time = time.time()
-print(f"消耗时间为：{end_time - start_time}")
+print(f"Total elapse: {end_time - start_time}")
