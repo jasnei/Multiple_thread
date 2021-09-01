@@ -20,9 +20,8 @@ def producer(msg_queue):
     for i in range(5):
         m = Msg(i)
         msg_queue.put(m)
-        print('==>producer is processing ==> {}'.format(str(i)))
+        print('Producer is processing ==> {}'.format(str(i)))
         time.sleep(0.5)
-
 
 def consumer1(q, send_q):
     msg = q.get()
@@ -35,7 +34,6 @@ def consumer1(q, send_q):
 
     send_q.put(msg_2)
 
-
 def consumer2(send_q):
     msg = send_q.get()
 
@@ -44,7 +42,6 @@ def consumer2(send_q):
 
     msg_2 = func2(msg)
     print("{} is processed to {} by consumer2".format(msg, msg_2))
-
 
 if __name__ == '__main__':
 
