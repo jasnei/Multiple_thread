@@ -19,7 +19,17 @@ def producer(file_name):
     # image = np.random.randint(0, 255, (1024, 1024, 3), dtype=np.uint8)
     # q.put([fn, image])
     # print(f"Open {file_name}")
+    return np.array(new_img)
 
+def multi_loader(files):
+    images = []
+    # p = ProcessPoolExecutor(max_workers=8) # slower than ThredPoolExecutor
+    executor = ThreadPoolExecutor(max_workers=8)
+    results = executor.map(producer, files)
+    for result in results:
+        images.append(result)
+
+    return images
 
 
 def producer_1(q):
@@ -73,28 +83,37 @@ def main():
 
 
 if __name__ == "__main__":
-    from concurrent.futures import ProcessPoolExecutor
+    from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
     from multiprocessing import Pool
     from utils import  get_specified_files
     path = r"F:\Work\Data\svs_ano\test_split"
     files = get_specified_files(path, suffixes=[".png", ".jpg"], recursive=True)
     print(len(files))
+    i = 0
+    batch_size = 64
+    batch_files = files[i:batch_size]
 
     start_time = time.time()
     #===================================================================
     # Read 16007 image in 3.49s(lazy read), resize 480 247.26s
     #===================================================================
-    # for file in files[:]:
-    #     img = Image.open(file)
-    #     new_img = img.resize((480, 480))
+    # images = []
+    # for file in batch_files:
+    #     # img = Image.open(file)
+    #     # new_img = img.resize((480, 480))
+    #     img = producer(file)
+    #     images.append(img)
 
     #===================================================================
     # Read 16007 image in 11.62s, resize 480 76.59s-4, 66.27-6, 59.04-8, 51.69-10
     #====================================================================
-    p = ProcessPoolExecutor(max_workers=8)
-    results = p.map(producer, files)
-    for result in results:
-        pass
+    # images = []
+    # # p = ProcessPoolExecutor(max_workers=8) # slower than ThredPoolExecutor
+    # executor = ThreadPoolExecutor(max_workers=8)
+    # results = executor.map(producer, batch_files)
+    # for result in results:
+    #     images.append(result)
+    images = multi_loader(batch_files)
 
     #=================Not Working=================
     # produce_list = []
@@ -105,3 +124,18 @@ if __name__ == "__main__":
 
     end_time = time.time()
     print(f"Elapse: {end_time - start_time}")
+
+    images = np.stack(images)
+    print(f"images.shape: {images.shape}")
+
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(10, 10))
+    for i in range(images.shape[0]):
+        plt.subplot(8, 8, i+1)
+        img = images[i, :, :, :]
+        img = np.squeeze(img)
+        plt.imshow(img)
+        plt.axis('off')
+        plt.subplots_adjust(hspace=0.1, wspace=0.001)
+    plt.show()
