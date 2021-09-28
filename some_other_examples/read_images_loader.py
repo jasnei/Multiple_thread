@@ -5,10 +5,15 @@ import numpy as np
 from PIL import Image
 import threading
 
+def default_loader(file_name):
+    return Image.open(file_name)
+
+def transform_image(image):
+    return image.resize((480, 480))
 
 def producer(file_name):
-    img = Image.open(file_name)
-    new_img = img.resize((480, 480))
+    img = default_loader(file_name)
+    new_img = transform_image(img)
     # fn = "level_0_" + str(i)
     # fn = r"some_other_examples\data" + "/" + fn + ".png"
     # image = np.random.randint(0, 255, (1024, 1024, 3), dtype=np.uint8)
@@ -76,20 +81,20 @@ if __name__ == "__main__":
     print(len(files))
 
     start_time = time.time()
-    #=======================================================
-    # Read 16007 image in 3.49s, resize 480 76.59s
-    #=======================================================
-    for file in files[:]:
-        img = Image.open(file)
-        new_img = img.resize((480, 480))
+    #===================================================================
+    # Read 16007 image in 3.49s(lazy read), resize 480 247.26s
+    #===================================================================
+    # for file in files[:]:
+    #     img = Image.open(file)
+    #     new_img = img.resize((480, 480))
 
-    #=======================================================
-    # Read 16007 image in 11.62s, resize 480 76.59s
-    #=======================================================
-    # p = ProcessPoolExecutor(max_workers=4)
-    # results = p.map(producer, files)
-    # for result in results:
-    #     pass
+    #===================================================================
+    # Read 16007 image in 11.62s, resize 480 76.59s-4, 66.27-6, 59.04-8, 51.69-10
+    #====================================================================
+    p = ProcessPoolExecutor(max_workers=8)
+    results = p.map(producer, files)
+    for result in results:
+        pass
 
     #=================Not Working=================
     # produce_list = []
