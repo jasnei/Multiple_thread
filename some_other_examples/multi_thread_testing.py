@@ -34,7 +34,7 @@ def loop_mp():
     for i in range(worker_num):
         start = i * task_num
         end = (i+1) * task_num
-        p = Process(target=store_task, args=(big_data[start: end], '../data', i))
+        p = Process(target=store_task, args=(big_data[start: end], './data/mp_process', i))
         p.start()
         pool.append(p)
     for p in pool:
