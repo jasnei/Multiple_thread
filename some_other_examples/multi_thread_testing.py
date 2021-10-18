@@ -34,7 +34,7 @@ def loop_mp():
     for i in range(worker_num):
         start = i * task_num
         end = (i+1) * task_num
-        p = Process(target=store_task, args=(big_data[start: end], 'testdata/', i))
+        p = Process(target=store_task, args=(big_data[start: end], '../data', i))
         p.start()
         pool.append(p)
     for p in pool:
@@ -47,7 +47,7 @@ def mt_thread():
     for i in range(worker_num):
         start = i * task_num
         end = (i+1) * task_num
-        t = Thread(target=store_task, args=(big_data[start: end], 'testdata/thread', i))
+        t = Thread(target=store_task, args=(big_data[start: end], './data/thread', i))
         t.start()
         pool.append(t)
     for p in pool:
@@ -62,7 +62,7 @@ def mp_pool():
             start = i * task_num
             end = (i+1) * task_num
             tasks.append(
-                pool.apply_async(store_task_inner, (big_data[start: end], 'testdata/mp_pool', i)))
+                pool.apply_async(store_task, (big_data[start: end], './data/mp_pool', i)))
         pool.close()
         pool.join()
 
@@ -73,7 +73,7 @@ def loop_pool():
         for i in range(worker_num):
             start = i * task_num
             end = (i+1) * task_num
-            exe.submit(store_task, big_data[start: end], 'testdata/pool', i)
+            exe.submit(store_task, big_data[start: end], './data/pool', i)
 
 # 5. ThreadPoolExecutor
 def loop_thread():
@@ -81,12 +81,12 @@ def loop_thread():
         for i in range(worker_num):
             start = i * task_num
             end = (i+1) * task_num
-            exe.submit(store_task, big_data[start: end], 'testdata/pool_thread', i)
+            exe.submit(store_task, big_data[start: end], './data/pool_thread', i)
 
 # 6.  direct
 @profile
 def direct():
-    store_task(big_data, 'testdata/all', 0)
+    store_task(big_data, './data/all', 0)
 
 if __name__ == '__main__':
     with Benchmark("loop mp"):
