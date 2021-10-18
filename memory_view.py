@@ -1,3 +1,5 @@
+from memory_profiler import profile
+
 @profile
 def read_random():
     with open("data/random_data.txt", "rb") as source:
