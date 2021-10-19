@@ -54,6 +54,6 @@ def parallize_load(file, total_num, worker_num):
 if __name__ == '__main__':
     with Benchmark("parallel_load"):
         # data = np.loadtxt(r"data\all_worker_0.txt")
-        source_total_num = sum(1 for line in open(r"data\all_worker_0.txt"))
+        source_total_num = sum(1 for line in open("data/all_worker_0.txt"))
         print(source_total_num)
-        source_emb_data = parallize_load(r"data\all_worker_0.txt", source_total_num, 1)
+        source_emb_data = parallize_load("data/all_worker_0.txt", source_total_num, 1)

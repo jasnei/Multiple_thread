@@ -5,3 +5,4 @@ some_other_examples/test.py
 some_other_examples/read_images_loader.py
 data/
 test.py
+*.ipynb
