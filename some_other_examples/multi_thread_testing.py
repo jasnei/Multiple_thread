@@ -19,7 +19,7 @@ class Benchmark:
 
 # Base Task
 def store_task(data: np.ndarray, output, index):
-    fname = "%s_worker_%s.csv" % (output, index)
+    fname = "%s_worker_%s.txt" % (output, index)
     np.savetxt(fname, data, delimiter='\t')
 
 #main data source
