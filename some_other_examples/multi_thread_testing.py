@@ -20,7 +20,8 @@ class Benchmark:
 # Base Task
 def store_task(data: np.ndarray, output, index):
     fname = "%s_worker_%s.txt" % (output, index)
-    np.savetxt(fname, data, delimiter='\t')
+    # np.savetxt(fname, data, delimiter='\t')
+    np.save(fname, data)
 
 #main data source
 worker_num = os.cpu_count()
