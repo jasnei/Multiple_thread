@@ -1,4 +1,4 @@
-
+import time
 
 
 ALIVE = '*'
@@ -105,8 +105,10 @@ grid.set(2, 4, ALIVE)
 # print(grid)
 
 columns = ColumnPrinter()
-for i in range(10):
+start = time.time()
+for i in range(10000):
     columns.append(str(grid))
     grid = simulate(grid)
-
-print(columns)
+end = time.time()
+# print(columns)
+print(f"Elaps: {end - start:.4} seconds")
