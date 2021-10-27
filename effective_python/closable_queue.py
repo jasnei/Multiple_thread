@@ -6,7 +6,7 @@ from PIL import Image
 import numpy as np
 
 class ClosableQueue(Queue):
-    SENTINEL = object()
+    SENTINEL = None
 
     def close(self):
         self.put(self.SENTINEL)
@@ -39,9 +39,9 @@ def download(item):
     return item
 
 def resize(item):
-    # img = Image.fromarray(item)
-    # img = np.array(img.resize((128, 128)))
-    return item
+    img = Image.fromarray(item)
+    img = np.array(img.resize((128, 128)))
+    return img
 
 def upload(item):
     return item
@@ -89,8 +89,8 @@ upload_threads = start_threads(
 
 for i in range(1000):
     # print(f'Putting object {i}')
-    # img = np.random.randint(0, 256, [512, 512, 3], dtype=np.uint8)
-    download_queue.put(object())
+    img = np.random.randint(0, 256, [512, 512, 3], dtype=np.uint8)
+    download_queue.put(img)
 
 # download_queue.close()
 
@@ -104,3 +104,10 @@ stop_threads(resize_queue, resize_threads)
 stop_threads(upload_queue, upload_threads)
 
 print(f'Processed {done_queue.qsize()} items')
+
+for thread in upload_threads:
+    done_queue.put(None)
+for i, object in enumerate(done_queue):
+    print(object.shape, i)
+    if object is None:
+        break
