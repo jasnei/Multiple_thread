@@ -56,7 +56,7 @@ resize_queue = MyQueue()
 upload_queue = MyQueue()
 done_queue = MyQueue()
 threads = [
-    Worker(download, done_queue, resize_queue),
+    Worker(download, download_queue, resize_queue),
     Worker(resize, resize_queue, upload_queue),
     Worker(upload, upload_queue, done_queue),
 ]
