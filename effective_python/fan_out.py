@@ -2,6 +2,9 @@ import time
 from threading import Lock, Thread
 from concurrent.futures import ThreadPoolExecutor
 
+"""
+频繁的线程启动与结束
+"""
 
 ALIVE = '*'
 EMPTY = '-'
@@ -79,6 +82,22 @@ def step_cell(y, x, get, set):
     next_state = game_logic(state, neighbors)
     set(y, x, next_state)
 
+def simulate_threaded(grid):
+    next_grid = LockingGrid(grid.height, grid.width)
+
+    threads = []
+    for y in range(grid.height):
+        for x in range(grid.width):
+            args = (y, x, grid.get, next_grid.set)
+            thread = Thread(target=step_cell, args=args)
+            thread.start()
+            threads.append(thread)
+    
+    for thread in threads:
+        thread.join()
+    
+    return next_grid
+
 def simulate_pool(pool, grid):
     next_grid = LockingGrid(grid.height, grid.width)
 
@@ -132,10 +151,14 @@ grid.set(2, 4, ALIVE)
 
 columns = ColumnPrinter()
 start = time.time()
-with ThreadPoolExecutor(max_workers=10) as pool:
-    for i in range(10000):
-        columns.append(str(grid))
-        grid = simulate_pool(pool, grid)
+# with ThreadPoolExecutor(max_workers=10) as pool:
+#     for i in range(10000):
+#         columns.append(str(grid))
+#         grid = simulate_pool(pool, grid)
+
+for i in range(10):
+    columns.append(str(grid))
+    grid = simulate_threaded(grid)
 
 end = time.time()
 # print(columns)
