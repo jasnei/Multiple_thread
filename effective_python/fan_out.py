@@ -109,7 +109,7 @@ def simulate_pool(pool, grid):
             futures.append(future)
     
     for future in futures:
-        future.result()                             # Fan out
+        future.result()                             # Fan in
 
     return next_grid
 
