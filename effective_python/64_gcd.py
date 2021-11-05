@@ -23,6 +23,8 @@ def main():
     results = list(map(gcd, NUMBERS))
     end = time.time()
     elapse = end - start
+    # for result in results:
+    #     print(result)
     print(f"Normal took {elapse:.3f} seconds")
 
 def main_thread():
@@ -31,6 +33,8 @@ def main_thread():
     results = list(pool.map(gcd, NUMBERS))
     end = time.time()
     elapse = end - start
+    # for result in results:
+    #     print(result)
     print(f"Threads took {elapse:.3f} seconds")
 
 def main_process():
@@ -39,6 +43,8 @@ def main_process():
     results = list(pool.map(gcd, NUMBERS))
     end = time.time()
     elapse = end - start
+    # for result in results:
+    #     print(result)
     print(f"Process took {elapse:.3f} seconds")
 
 if __name__ == '__main__':
