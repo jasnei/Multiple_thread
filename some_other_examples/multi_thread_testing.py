@@ -28,7 +28,7 @@ worker_num = os.cpu_count()
 big_data = np.random.rand(1000000, 10)
 task_num = big_data.shape[0] // worker_num
 
-# 1. multiprocessing.Porcess
+# 1. multiprocessing.Porcess loop mp: consume: 11.032109022140503
 @profile
 def loop_mp():
     pool = []
@@ -41,7 +41,7 @@ def loop_mp():
     for p in pool:
         p.join()
 
-# 2. threading.Thread
+# 2. threading.Thread mt thread: consume: 0.03189706802368164
 @profile
 def mt_thread():
     pool = []
@@ -54,7 +54,7 @@ def mt_thread():
     for p in pool:
         p.join()
 
-# 3. multiprocessing.Pool
+# 3. multiprocessing.Pool mp pool: consume: 3.398695707321167
 @profile
 def mp_pool():
     with Pool(processes=worker_num) as pool:
@@ -67,7 +67,7 @@ def mp_pool():
         pool.close()
         pool.join()
 
-# 4. ProcessPoolExecutor
+# 4. ProcessPoolExecutor loop pool: consume: 3.5791423320770264
 @profile
 def loop_pool():
     with ProcessPoolExecutor(max_workers=worker_num) as exe:
@@ -76,7 +76,8 @@ def loop_pool():
             end = (i+1) * task_num
             exe.submit(store_task, big_data[start: end], './data/pool', i)
 
-# 5. ThreadPoolExecutor
+# 5. ThreadPoolExecutor Thread: consume: 0.028922557830810547
+@profile
 def loop_thread():
     with ThreadPoolExecutor(max_workers=worker_num) as exe:
         for i in range(worker_num):
@@ -84,7 +85,7 @@ def loop_thread():
             end = (i+1) * task_num
             exe.submit(store_task, big_data[start: end], './data/pool_thread', i)
 
-# 6.  direct
+# 6.  direct direct: consume: 0.11469340324401855
 @profile
 def direct():
     store_task(big_data, './data/all', 0)
@@ -98,7 +99,8 @@ if __name__ == '__main__':
         mp_pool()
     with Benchmark("loop pool"):
         loop_pool()
-    with Benchmark("direct"):
-        direct()
     with Benchmark("Thread"):
         loop_thread()
+    with Benchmark("direct"):
+        direct()
+    
