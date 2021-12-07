@@ -4,7 +4,10 @@ Parallel load data from same file. not working yet!!!
 import os
 import time
 from functools import wraps
-from multiprocessing import Process, Pool, Manager
+# from multiprocessing import Process, Pool, Manager
+# 据了解，multiprocess模块采用dill来序列化并传递数据
+# 避免了multiprocessing模块采用pickle的限制
+from multiprocess import Process, Manager
 import numpy as np
 
 #main data source
@@ -56,4 +59,4 @@ if __name__ == '__main__':
         # data = np.loadtxt(r"data\all_worker_0.txt")
         source_total_num = sum(1 for line in open("data/all_worker_0.txt"))
         print(source_total_num)
-        source_emb_data = parallize_load("data/all_worker_0.txt", source_total_num, 1)
+        source_emb_data = parallize_load("data/all_worker_0.txt", source_total_num, 8)
