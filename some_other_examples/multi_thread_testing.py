@@ -15,11 +15,11 @@ class Benchmark:
         self.start = time.time()
     def __exit__(self, *args):
         self.end = time.time()
-        print("%s: consume: %s" % (self.text, self.end - self.start))
+        print(f"{self.text}: consume: {self.end - self.start}")
 
 # Base Task
 def store_task(data: np.ndarray, output, index):
-    fname = "%s_worker_%s.txt" % (output, index)
+    fname = f"{output}_worker_{index}.txt"
     # np.savetxt(fname, data, delimiter='\t')
     np.save(fname, data)
 

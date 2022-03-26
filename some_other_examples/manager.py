@@ -11,9 +11,9 @@ def work(d, lock):
 if __name__ == '__main__':
     lock = Lock()
     with Manager() as m:
-        dic = m.dict({'count': 100})
+        dic = m.dict({'count': 1000})
         p_l = []
-        for i in range(100):
+        for _ in range(1000):
             p = Process(target=work, args=(dic, lock))
             p_l.append(p)
             p.start()

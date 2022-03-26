@@ -3,7 +3,7 @@ import time
 import os
 
 
-def producer(name, q):
+def producer(name, q):  # sourcery skip: replace-interpolation-with-fstring
     for i in range(3):
         time.sleep(0.1)
         res = "%s-%s" %(name, i)
@@ -12,7 +12,7 @@ def producer(name, q):
     # q.put(None) # send ending signal, also could be in send in main
 
 
-def consumer(q):
+def consumer(q):  # sourcery skip: replace-interpolation-with-fstring
     while True:
         res = q.get()
         if res is None: break # End signal

@@ -23,7 +23,7 @@ class Benchmark:
         self.start = time.time()
     def __exit__(self, *args):
         self.end = time.time()
-        print("%s: consume: %s" % (self.text, self.end - self.start))
+        print(f"{self.text}: consume: {self.end - self.start}")
 
 def parallize_load(file, total_num, worker_num):
     """Load embedding file parallelization
@@ -57,6 +57,6 @@ def parallize_load(file, total_num, worker_num):
 if __name__ == '__main__':
     with Benchmark("parallel_load"):
         # data = np.loadtxt(r"data\all_worker_0.txt")
-        source_total_num = sum(1 for line in open("data/all_worker_0.txt"))
+        source_total_num = sum(1 for _ in open("data/all_worker_0.txt"))
         print(source_total_num)
         source_emb_data = parallize_load("data/all_worker_0.txt", source_total_num, 8)

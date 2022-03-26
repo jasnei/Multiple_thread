@@ -22,19 +22,15 @@ def producer(file_name):
     return np.array(new_img)
 
 def multi_loader(files):
-    images = []
     # p = ProcessPoolExecutor(max_workers=8) # slower than ThredPoolExecutor
     executor = ThreadPoolExecutor(max_workers=8)
     results = executor.map(producer, files)
-    for result in results:
-        images.append(result)
-
-    return images
+    return list(results)
 
 
 def producer_1(q):
     for i in range(500):
-        fn = "level_0_" + str(i)
+        fn = f"level_0_{str(i)}"
         fn = r"some_other_examples\data" + "/" + fn + ".png"
         image = np.random.randint(0, 255, (1024, 1024, 3), dtype=np.uint8)
         q.put([fn, image])
@@ -61,7 +57,7 @@ def main():
 
     # Now one 1 producer is most fast than others
     produce_list = []
-    for i in range(1):
+    for _ in range(1):
         p1 = Process(target=producer, args=(q,))
         # can be changed to threading.thead
         # p1 = threading.Thread(target=producer, args=(q,))
@@ -69,7 +65,7 @@ def main():
         produce_list.append(p1)
 
     consum_list = []
-    for i in range(10):
+    for _ in range(10):
         c1 = Process(target=consumer, args=(q,))
         # c1 = threading.Thread(target=consumer, args=(q,))
         c1.start()
@@ -78,7 +74,7 @@ def main():
     for p in produce_list:
         p.join()
 
-    for i in range(len(consum_list)):
+    for _ in consum_list:
         q.put(None)
 
 
@@ -90,7 +86,7 @@ if __name__ == "__main__":
     files = get_specified_files(path, suffixes=[".png", ".jpg"], recursive=True)
     print(len(files))
     i = 0
-    batch_size = 64
+    batch_size = 256
     batch_files = files[i:batch_size]
 
     start_time = time.time()
@@ -111,8 +107,7 @@ if __name__ == "__main__":
     # # p = ProcessPoolExecutor(max_workers=8) # slower than ThredPoolExecutor
     # executor = ThreadPoolExecutor(max_workers=8)
     # results = executor.map(producer, batch_files)
-    # for result in results:
-    #     images.append(result)
+    # images.extend(iter(results))
     images = multi_loader(batch_files)
 
     #=================Not Working=================
@@ -128,14 +123,14 @@ if __name__ == "__main__":
     images = np.stack(images)
     print(f"images.shape: {images.shape}")
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
 
-    plt.figure(figsize=(10, 10))
-    for i in range(images.shape[0]):
-        plt.subplot(8, 8, i+1)
-        img = images[i, :, :, :]
-        img = np.squeeze(img)
-        plt.imshow(img)
-        plt.axis('off')
-        plt.subplots_adjust(hspace=0.1, wspace=0.001)
-    plt.show()
+    # plt.figure(figsize=(10, 10))
+    # for i in range(images.shape[0]):
+    #     plt.subplot(8, 8, i+1)
+    #     img = images[i, :, :, :]
+    #     img = np.squeeze(img)
+    #     plt.imshow(img)
+    #     plt.axis('off')
+    #     plt.subplots_adjust(hspace=0.1, wspace=0.001)
+    # plt.show()
